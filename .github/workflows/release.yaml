@@ -27,7 +27,7 @@ jobs:
           load: true
           platforms: linux/amd64
           tags: kmind-agent-docker:scan
-      - uses: aquasecurity/trivy-action@0.30.0
+      - uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: kmind-agent-docker:scan
           format: table
