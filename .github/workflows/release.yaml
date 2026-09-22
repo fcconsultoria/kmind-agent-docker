@@ -31,8 +31,17 @@ jobs:
         with:
           image-ref: kmind-agent-docker:scan
           format: table
+          exit-code: "0"
+          severity: HIGH,CRITICAL
+      # Fail the release only when an actionable vulnerability has a fix.
+      # The report above still records findings that upstream has not fixed.
+      - uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: kmind-agent-docker:scan
+          format: table
           exit-code: "1"
           severity: HIGH,CRITICAL
+          ignore-unfixed: true
       - uses: docker/build-push-action@v6
         with:
           context: .
