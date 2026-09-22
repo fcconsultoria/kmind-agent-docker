@@ -1,0 +1,9 @@
+services:
+  kmind-agent-docker:
+    extends: {file: docker-compose.yaml, service: kmind-agent-docker}
+    user: "1000:1000"
+    volumes:
+      - ${XDG_RUNTIME_DIR}/docker.sock:/run/user/1000/docker.sock
+      - kmind-agent-data:/var/lib/kmind-agent
+    environment:
+      DOCKER_HOST: unix:///run/user/1000/docker.sock

@@ -1,0 +1,17 @@
+services:
+  workload:
+    image: alpine:3.21
+    command: ["sh", "-c", "while true; do echo benchmark-log; sleep 1; done"]
+    deploy: {replicas: 1}
+  kmind-agent-docker:
+    image: ghcr.io/fcconsultoria/kmind-agent-docker:latest
+    volumes: [/var/run/docker.sock:/var/run/docker.sock]
+    environment:
+      KMIND_API_KEY_FILE: /run/secrets/kmind_api_key
+      KMIND_SERVICE_NAME: docker-benchmark
+      KMIND_APPLICATION_NAME: benchmark
+      KMIND_ENDPOINT: ${KMIND_ENDPOINT}
+      KMIND_STATUS_ENDPOINT: ${KMIND_STATUS_ENDPOINT}
+    secrets: [kmind_api_key]
+secrets:
+  kmind_api_key: {file: ./kmind_api_key.txt}

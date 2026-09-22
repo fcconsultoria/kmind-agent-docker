@@ -1,0 +1,20 @@
+services:
+  kmind-agent-docker:
+    image: ghcr.io/fcconsultoria/kmind-agent-docker:latest
+    deploy: {mode: global, restart_policy: {condition: any}}
+    environment:
+      KMIND_API_KEY_FILE: /run/secrets/kmind_api_key
+      KMIND_SERVICE_NAME: docker-swarm
+      KMIND_APPLICATION_NAME: infrastructure
+      KMIND_ENDPOINT: https://ingest.kmind.com.br
+      KMIND_STATUS_ENDPOINT: https://ingest.kmind.com.br/v1/agent/status
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kmind-agent-data:/var/lib/kmind-agent
+    secrets: [kmind_api_key]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    labels: {kmind.monitoring: "disabled"}
+secrets: {kmind_api_key: {external: true}}
+volumes: {kmind-agent-data: {}}

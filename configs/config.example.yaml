@@ -1,0 +1,19 @@
+kmind:
+  apiKeyFile: /run/secrets/kmind_api_key
+  serviceName: docker-production
+  applicationName: infrastructure
+  endpoint: https://ingest.kmind.com.br
+  statusEndpoint: https://ingest.kmind.com.br/v1/agent/status
+docker:
+  socket: unix:///var/run/docker.sock
+  apiVersion: auto
+collection:
+  metricsInterval: 90s
+  diskUsageInterval: 15m
+  metadataRefreshInterval: 5m
+limits:
+  memoryBufferBytes: 2097152
+  maxMemoryBufferBytes: 5242880
+  maxBatchBytes: 524288
+  requestTimeout: 5s
+stateDir: /var/lib/kmind-agent

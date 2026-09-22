@@ -1,0 +1,25 @@
+services:
+  kmind-agent-docker:
+    image: ghcr.io/fcconsultoria/kmind-agent-docker:latest
+    restart: unless-stopped
+    # Set these to the Docker socket owner/group. Defaults preserve a working
+    # rootful installation; use a non-root UID/GID whenever the socket allows.
+    user: "${KMIND_AGENT_UID:-0}:${KMIND_AGENT_GID:-0}"
+    environment:
+      KMIND_API_KEY_FILE: /run/secrets/kmind_api_key
+      KMIND_SERVICE_NAME: docker-production
+      KMIND_APPLICATION_NAME: infrastructure
+      KMIND_ENDPOINT: https://ingest.kmind.com.br
+      KMIND_STATUS_ENDPOINT: https://ingest.kmind.com.br/v1/agent/status
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kmind-agent-data:/var/lib/kmind-agent
+    secrets: [kmind_api_key]
+    read_only: true
+    tmpfs: [/tmp:size=16m,noexec,nosuid]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    labels: {kmind.monitoring: "disabled"}
+secrets:
+  kmind_api_key: {file: ./kmind_api_key.txt}
+volumes: {kmind-agent-data: {}}
